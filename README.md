@@ -414,7 +414,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku git:remote -a rust-bmi-api-8f27ba8e9356
+          heroku git:remote -a rust-bmi-api-2-ddcca46c7003
           git push heroku HEAD:main -f
 
 
@@ -439,7 +439,7 @@ Value: Past the token value you got with `heroku auth:token`
 
 
 <div align="center">
-<img src="./assets/img_0è.webp" alt="" width="900" loading="lazy"/>
+<img src="./assets/img_07.webp" alt="" width="900" loading="lazy"/>
 </div>
 
 
