@@ -4,7 +4,7 @@ git push heroku main
 
 <!-- Find the [blog post here](https://www.40tude.fr/docs/06_programmation/rust/011_api_heroku/api_heroku.html). -->
 
-![Test and Deploy](https://github.com/philippegit/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)
+[![Test and Deploy](https://github.com/40tude/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)](https://github.com/40tude/bmi_api_2/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Rust Version](https://img.shields.io/badge/rust-1.88+-blue.svg)](https://www.rust-lang.org)
 [![Heroku App](https://img.shields.io/badge/heroku-live-purple?logo=heroku)](https://rust-bmi-api-2.herokuapp.com)
@@ -516,8 +516,7 @@ heroku run bash
 Add the line below at the top of the README.md file
 
 ```
-![Test and Deploy](https://github.com/philippegit/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)
-
+[![Test and Deploy](https://github.com/40tude/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)](https://github.com/40tude/bmi_api_2/actions)
 ```
 
 ## Step 11 - Optional
