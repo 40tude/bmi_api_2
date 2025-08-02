@@ -277,6 +277,7 @@ pub async fn calculate_bmi(Json(payload): Json<BmiRequest>) -> Result<Json<BmiRe
 
 ```
 cargo add tower
+cargo add serde-json
 ```
 
 Create a `/tests/api.rs` file with the following content.
@@ -354,7 +355,7 @@ cargo run
 
 
 ```
-cargo run --example client
+curl -X POST http://localhost:8080/bmi  -H "Content-Type: application/json" -d '{"height": 1.69, "weight": 71.0}'
 
 ```
 
@@ -368,6 +369,104 @@ cargo run --example client
 cargo test  
 
 ```
+
+
+<div align="center">
+<img src="./assets/img_06.webp" alt="" width="900" loading="lazy"/>
+</div>
+
+
+
+## Step 7
+
+Create `.github/workflows/test-and-deploy.yml`
+Copy the code below
+
+```yml
+name: Test and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - name: Run tests
+        run: cargo test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku git:remote -a rust-bmi-api-8f27ba8e9356
+          git push heroku HEAD:main -f
+
+
+```
+
+We need to add the Heroku token to GitHub. Let's get back the token
+
+```
+heroku auth:token
+»   Warning: token will expire 08/30/2025
+»   To generate a token that expires in one year, use heroku authorizations:create.
+HRKU-AAYLneWaZt-hqJ7cqwH3Ou_...
+
+```
+
+- Copy the token
+- Open GitHub repo
+- GitHub → Settings → Secrets and variables → Actions → New repository secret :
+
+Name: HEROKU_API_KEY
+Value: Past the token value you got with `heroku auth:token`
+
+
+<div align="center">
+<img src="./assets/img_0è.webp" alt="" width="900" loading="lazy"/>
+</div>
+
+
+Commit on GitHub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

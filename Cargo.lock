@@ -134,6 +134,7 @@ dependencies = [
  "axum-server",
  "reqwest",
  "serde",
+ "serde_json",
  "tokio",
  "tower",
 ]
