@@ -4,6 +4,11 @@ git push heroku main
 
 <!-- Find the [blog post here](https://www.40tude.fr/docs/06_programmation/rust/011_api_heroku/api_heroku.html). -->
 
+![Test and Deploy](https://github.com/philippegit/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Rust Version](https://img.shields.io/badge/rust-1.88+-blue.svg)](https://www.rust-lang.org)
+[![Heroku App](https://img.shields.io/badge/heroku-live-purple?logo=heroku)](https://rust-bmi-api-2.herokuapp.com)
+
 
 
 ## Step 1
@@ -273,6 +278,18 @@ pub async fn calculate_bmi(Json(payload): Json<BmiRequest>) -> Result<Json<BmiRe
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 ## Step 6
 
 ```
@@ -341,6 +358,7 @@ async fn test_valid_bmi_should_succeed() {
 }
 ```
 
+## Step 7
 
 - Publish on GitHub
 - Make a test locally
@@ -377,7 +395,7 @@ cargo test
 
 
 
-## Step 7
+## Step 8
 
 Create `.github/workflows/test-and-deploy.yml`
 Copy the code below
@@ -396,6 +414,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Mandatory for Heroku push
 
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
@@ -418,6 +438,7 @@ jobs:
           git remote add heroku https://heroku:${HEROKU_API_KEY}@git.heroku.com/rust-bmi-api-2.git
           git push heroku HEAD:main --force
 ```
+
 In the script above, make sure to update the `heroku git:remote -a rust-bmi-api-2` with the name of you project (find it with either `git remote -v` or `heroku apps`)
 
 We need to add the Heroku token to GitHub. Let's get back the token
@@ -443,8 +464,94 @@ Value: Past the token value you got with `heroku auth:token`
 </div>
 
 
-Commit on GitHub
 
+
+
+
+
+
+
+
+
+## Step 9
+Commit on GitHub and check Actions in the repo
+
+
+<div align="center">
+<img src="./assets/img_07.webp" alt="" width="900" loading="lazy"/>
+</div>
+
+Let's double check what is available on Heroku
+
+```
+heroku run bash
+
+```
+
+<div align="center">
+<img src="./assets/img_07.webp" alt="" width="900" loading="lazy"/>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+## TODO 
+- double check from where the bmi_api comes from
+
+
+
+
+
+
+
+
+## Step 10
+Add the line below at the top of the README.md file
+
+```
+![Test and Deploy](https://github.com/philippegit/bmi_api_2/actions/workflows/test-and-deploy.yml/badge.svg)
+
+```
+
+## Step 11 - Optional
+
+Additionally one can add a LICNESE file
+- Go to the GitHub repo
+- Click on “Add file” > “Create new file”.
+- Name it LICENSE
+- At the top, GitHub offers you a button “Choose a license template”.
+- Click on it, choose MIT for example, and validate
+- Now that you have a LICENSE file you can add the line below at the top of the README.md
+
+```
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+```
+
+We can add the minimal Rust version required
+```
+[![Rust Version](https://img.shields.io/badge/rust-1.88+-blue.svg)](https://www.rust-lang.org)
+```
+
+Let's add an Heroku logo as well
+
+```
+[![Heroku App](https://img.shields.io/badge/heroku-live-purple?logo=heroku)](https://rust-bmi-api-2.herokuapp.com)
+```
+
+If one day we have a version we can add
+
+```
+[![GitHub release](https://img.shields.io/github/v/release/philippegit/bmi_api_2)](https://github.com/philippegit/bmi_api_2/releases)
+```
+
+Attention. This requires at least one “release” created in GitHub → via the repo's “Releases” tab.
 
 
 
