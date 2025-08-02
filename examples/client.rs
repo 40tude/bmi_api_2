@@ -17,7 +17,7 @@ struct BmiResponse {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let url = "https://rust-bmi-api-b4fd519caa8f.herokuapp.com/bmi";
+    let url = "https://rust-bmi-api-2-ddcca46c7003.herokuapp.com/bmi";
 
     // Example data
     let request_body = BmiRequest { height: 1.69, weight: 69.0 };

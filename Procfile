@@ -1,1 +1,1 @@
-web: ./target/release/bmi_api
+web: ./target/release/bmi_api_2
