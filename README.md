@@ -390,36 +390,35 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           profile: minimal
           override: true
+
       - name: Run tests
         run: cargo test
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: ${{ success() }}
-    steps:
-      - uses: actions/checkout@v4
       - name: Install Heroku CLI
-        run: curl https://cli-assets.heroku.com/install.sh | sh
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku git:remote -a rust-bmi-api-2
-          git push heroku HEAD:main -f
-
-
+          git remote add heroku https://heroku:${HEROKU_API_KEY}@git.heroku.com/rust-bmi-api-2.git
+          git push heroku HEAD:main --force
 ```
-In the script above, make sure to update the `heroku git:remote -a rust-bmi-api-2` with 
+In the script above, make sure to update the `heroku git:remote -a rust-bmi-api-2` with the name of you project (find it with either `git remote -v` or `heroku apps`)
 
 We need to add the Heroku token to GitHub. Let's get back the token
 
