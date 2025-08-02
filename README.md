@@ -132,6 +132,19 @@ Everything is in the `main.rs` file and this does not facilitate testing. Below 
 
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Step 2
 Create a file `src/lib.rs` and copy/paste the code below
 
@@ -142,13 +155,23 @@ pub mod api;
 
 
 
+
+
+
+
+
+
+
+
+
+
 ## Step 3
 Modify `main.rs` as below so that it calls functions (here, `api::calculate_bmi()`) from the `api.rs` module
 
 ```rust
-use axum::{Router, routing::post, http::StatusCode, response::IntoResponse};
+use axum::{Router, http::StatusCode, response::IntoResponse, routing::post};
+use bmi_api::api::calculate_bmi;
 use std::net::SocketAddr;
-use bmi_api::api::calculate_bmi; 
 
 async fn health_check() -> impl IntoResponse {
     (StatusCode::OK, "BMI API is up and running")
@@ -156,13 +179,9 @@ async fn health_check() -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new()
-        .route("/bmi", post(calculate_bmi))
-        .route("/", axum::routing::get(health_check));
+    let app = Router::new().route("/bmi", post(calculate_bmi)).route("/", axum::routing::get(health_check));
 
-    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string())
-        .parse()
-        .expect("PORT must be a number");
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string()).parse().expect("PORT must be a number");
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
 
     println!("Listening on {addr}");
@@ -170,6 +189,16 @@ async fn main() {
     axum_server::bind(addr).serve(app.into_make_service()).await.unwrap();
 }
 ```
+
+
+
+
+
+
+
+
+
+
 
 ## Step 4
 Modyfy `Cargo.toml` as below
@@ -197,6 +226,15 @@ strip = "symbols"
 ```
 
 
+
+
+
+
+
+
+
+
+
 ## Step 5
 
 Create a file `src/api.rs` and copy/paste the code below
@@ -213,7 +251,7 @@ pub struct BmiRequest {
 }
 
 // Structure for response body
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)] 
 pub struct BmiResponse {
     pub bmi: f32,
 }
@@ -229,23 +267,31 @@ pub async fn calculate_bmi(Json(payload): Json<BmiRequest>) -> Result<Json<BmiRe
     }
 
     let bmi = payload.weight / (payload.height * payload.height);
-    Ok(Json(BmiResponse {
-        bmi: (bmi * 100.0).round() / 100.0,
-    }))
+    Ok(Json(BmiResponse { bmi: (bmi * 100.0).round() / 100.0 }))
 }
-
-
 ```
 
 
 
-## Step 4
+## Step 6
+
+```
+cargo add tower
+```
+
 Create a `/tests/api.rs` file with the following content.
 
 ```rust
-use axum::{Router, routing::post, body::Body, http::{Request, StatusCode}};
+use axum::body::to_bytes;
+use axum::{
+    Router,
+    body::Body,
+    http::{Request, StatusCode},
+    routing::post,
+};
+// use bmi_api::api::{BmiRequest, BmiResponse, calculate_bmi};
+use bmi_api::api::{BmiResponse, calculate_bmi};
 use tower::ServiceExt;
-use bmi_api::api::{calculate_bmi, BmiRequest, BmiResponse}; // now imported cleanly
 
 fn app() -> Router {
     Router::new().route("/bmi", post(calculate_bmi))
@@ -268,19 +314,60 @@ async fn test_zero_weight_should_fail() {
     assert_eq!(response.status(), StatusCode::BAD_REQUEST);
 }
 
+#[tokio::test]
+async fn test_valid_bmi_should_succeed() {
+    let app = app();
 
+    let payload = r#"{ "height": 1.75, "weight": 70.0 }"#;
+    let request = Request::builder()
+        .method("POST")
+        .uri("/bmi")
+        .header("Content-Type", "application/json")
+        .body(Body::from(payload))
+        .unwrap();
+
+    let response = app.oneshot(request).await.unwrap();
+
+    // Check HTTP 200
+    assert_eq!(response.status(), StatusCode::OK);
+
+    // Extract JSON body
+    let body = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+    let parsed: BmiResponse = serde_json::from_slice(&body).unwrap();
+
+    // Check BMI value (rounded to 2 decimals)
+    assert!((parsed.bmi - 22.86).abs() < 0.01, "Expected ≈22.86, got {}", parsed.bmi);
+}
 ```
 
 
 - Publish on GitHub
 - Make a test locally
+
 ```
 cargo run
 ```
 
+<div align="center">
+<img src="./assets/img_04.webp" alt="" width="900" loading="lazy"/>
+</div>
+
+
+```
+cargo run --example client
+
+```
+
+<div align="center">
+<img src="./assets/img_05.webp" alt="" width="900" loading="lazy"/>
+</div>
 
 
 
+```
+cargo test  
+
+```
 
 
 

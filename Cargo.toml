@@ -9,6 +9,7 @@ axum-server = "0.7.2"
 reqwest = { version = "0.12.22", features = ["json"] }
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.47.1", features = ["full"] }
+tower = "0.5.2"
 
 [lib]
 name = "bmi_api"

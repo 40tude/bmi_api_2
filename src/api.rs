@@ -9,7 +9,7 @@ pub struct BmiRequest {
 }
 
 // Structure for response body
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct BmiResponse {
     pub bmi: f32,
 }
