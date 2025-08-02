@@ -29,5 +29,5 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku git:remote -a rust-bmi-api-2-ddcca46c7003
+          heroku git:remote -a rust-bmi-api-2
           git push heroku HEAD:main -f
