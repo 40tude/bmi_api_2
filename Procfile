@@ -1,0 +1,1 @@
+web: ./target/release/bmi_api
