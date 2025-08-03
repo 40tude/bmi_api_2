@@ -611,11 +611,11 @@ Now on GitHub the `README.md` should be displayed as below
 
 ## Conclusion
 
-At the end of [Episode 1/2]({%link docs/06_programmation/rust/011_api_heroku/api_heroku.md%}) and Episode 2/2 (this file) we have :
+At the end of [Episode 1/2](https://www.40tude.fr/docs/06_programmation/rust/011_api_heroku/api_heroku.html) and Episode 2/2 (this file) we have :
 * A first API Server which can be checked locally
 * We also have a Rust client
 * More importantly, the files are organized so that tests can be written and executed locally
 * Cherry on the cake, when we push on GitHub, the tests are executed remotely and if they are successful the API server is deployed from GitHub to Heroku
 * On GitHub, the `README.md` file clearly indicates the status of the tests... With some logos
 
-Not bad. I hope this will help some of you.
+Not bad. I hope this can help.
