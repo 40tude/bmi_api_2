@@ -9,6 +9,9 @@ pub struct BmiRequest {
 }
 
 // Structure for response body
+// Now it derive Deserialize. This is for the tests
+//      See test_valid_bmi_should_succeed()
+//      let parsed: BmiResponse = serde_json::from_slice(&body).unwrap();
 #[derive(Serialize, Deserialize)]
 pub struct BmiResponse {
     pub bmi: f32,
